@@ -21,6 +21,12 @@ func main() {
 """
 
 write_file(
+    name="default_config_file",
+    out="file.txt",
+    content = ["foo"],
+)
+
+write_file(
     name="hello_file",
     out="hello.go",
     content = select({
@@ -32,6 +38,11 @@ write_file(
 go_binary(
     name = "hello_binary",
     srcs = ["hello.go"],
+)
+
+filegroup(
+    name = "hello_filegroup",
+    srcs = [":hello_binary"],
 )
 
 constraint_setting(name = "is_broken")
@@ -59,7 +70,7 @@ platform(
 platform_transition_filegroup(
     name = "broken_hello_filegroup",
     srcs = [
-        ":hello_binary",
+        ":hello_filegroup",
     ],
     target_platform = "//:broken_build_platform",
 )
